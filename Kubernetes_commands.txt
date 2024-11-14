@@ -1,0 +1,84 @@
+To create a cluster, run the following command, replacing [CLUSTER-NAME] with the name you choose for 
+the cluster (for example:my-cluster).
+=====================================================================================================
+#gcloud container clusters create [CLUSTER-NAME]
+
+You can ignore any warnings in the output. It might take several minutes to finish creating the cluster.
+
+After creating your cluster, you need authentication credentials to interact with it.
+
+
+To authenticate into the GKE cluster, run the following command, replacing [CLUSTER-NAME] 
+with the name of your cluster:
+=========================================================================================
+#gcloud container clusters get-credentials [CLUSTER-NAME]
+Ex: gcloud container clusters get-credentials bf-diverse-nonprod-cluster
+
+
+To create a new Deployment hello-server from the hello-app container image, run the 
+following kubectl create command:
+===================================================================================
+#kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
+
+Ex: kubectl create deployment stubserver1 --image=gcr.io/bf-diverse-nonprod/busybox:stubtest
+
+
+To create a Kubernetes Service, which is a Kubernetes resource that lets you expose 
+your application to external traffic, run the following kubectl expose command:
+===================================================================================
+#kubectl expose deployment hello-server --type=LoadBalancer --port 8080
+
+Ex: kubectl expose deployment stubserver --type=LoadBalancer --port 8080
+
+In this command:
+
+--port specifies the port that the container exposes.
+type="LoadBalancer" creates a Compute Engine load balancer for your container.
+
+
+To inspect the hello-server Service, run kubectl get:
+=====================================================
+#kubectl get service
+
+
+To describe details about a component:
+======================================
+- Describe an ingress:
+  kubectl describe ingress <ingress name>
+
+-Describe pod:
+ kubectl describe pod <pod name>
+
+
+To apply <deploy> a yaml file:
+==============================
+-  kubectl apply -f <yaml file name>
+
+
+Updating a Deployment:
+======================
+Ex: Let's update the nginx Pods to use the nginx:1.16.1 image instead of the nginx:1.14.2 image:
+# kubectl set image deployment/nginx-deployment nginx=nginx:1.16.1
+
+Run the following command to check deployment status and verify changes are applied and running
+# kubectl get rs
+
+Edit a deployment:
+==================
+Let-s take the above example:
+
+# kubectl edit deployment/nginx-deployment
+Add your desired parameters and save.
+
+Scaling a Deployment:
+=====================
+Ex: kubectl scale deployment/nginx-deployment --replicas=10
+You can set "--replicas" parameter to what you need.
+
+Ex to set autoscaling:
+kubectl autoscale deployment/nginx-deployment --min=10 --max=15 --cpu-percent=80
+You can set "--min --max --cpu-percent" parameters to what you need.
+
+To delete the cluster, run the following command:
+=================================================
+#gcloud container clusters delete [CLUSTER-NAME]
