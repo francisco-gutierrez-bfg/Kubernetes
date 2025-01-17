@@ -5,7 +5,7 @@ Descarga y aplica el manifiesto oficial del Kubernetes Dashboard:
 Verifica que los recursos hayan sido creados correctamente:
  kubectl get all -n kubernetes-dashboard
 
-Asegúrate de que los pods y servicios estén en estado Running.
+Asegúrese de que los pods y servicios estén en estado Running.
 
 2. Configurar el Servicio como NodePort
 Por defecto, el servicio del Dashboard es de tipo ClusterIP, lo que limita el acceso al clúster. Para exponerlo, cambia su tipo a NodePort.
@@ -33,13 +33,16 @@ kubernetes-dashboard        NodePort   10.96.0.1      <none>        443:32412/TC
 
 En este caso, el puerto NodePort asignado es 32412.
 
-3. Configurar Port-Forward
+3. Configurar Port-Forward (opcional)
 Para acceder al Dashboard localmente, usa port-forward:
  kubectl port-forward -n kubernetes-dashboard svc/kubernetes-dashboard 8443:443
 
+4. Configurar un ingress (opcional)
+Utilice el ingress de su elección.
+
 Esto redirige el puerto 443 del servicio al puerto 8443 en tu máquina local.
 
-4. Crear un Usuario Administrador
+5. Crear un Usuario Administrador
 Para acceder al Dashboard, necesitas un token. Crea un archivo YAML con las siguientes configuraciones para un ServiceAccount y un ClusterRoleBinding:
 
 Archivo admin-user.yaml
@@ -73,7 +76,7 @@ Obtener el token del usuario administrador:
 
 Copia el token para usarlo más adelante.
 
-5. Acceder al Dashboard
+6. Acceder al Dashboard
 Desde la Máquina Local (Port-Forward)
 Acceder al Dashboard localmente desde tu navegador:
 
@@ -87,10 +90,14 @@ Luego, abrir el navegador y accede a:
 https://<NODE_IP>:<NODE_PORT>
 Reemplazar <NODE_IP> con la IP del nodo y <NODE_PORT> con el puerto NodePort (por ejemplo, 32412).
 
-6. Instalar metrics server:
+7. Instalar metrics server:
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
 
-7. (Opcional) Mejorar la Seguridad
+Si el clúster utiliza certificados autofirmados, modifique el deployment de metrics-server para agregar el siguiente argumento en la sección containers.args:
+
+- --kubelet-insecure-tls
+
+8. (Opcional) Mejorar la Seguridad
 Certificados SSL: Configura certificados válidos en el Dashboard para evitar advertencias de seguridad.
 Restricciones de Acceso: Usa reglas de firewall o configuraciones específicas para limitar quién puede acceder al Dashboard.
 

@@ -2,6 +2,10 @@ Instalar metrics Server:
 ------------------------
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
 
+Si el clúster utiliza certificados autofirmados, modifique el deployment de metrics-server para agregar el siguiente argumento en la sección containers.args:
+
+- --kubelet-insecure-tls
+
 Instalar Skooner K8s Dashboard:
 -------------------------------
 kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner.yaml
@@ -26,3 +30,4 @@ kubectl create token skooner-sa
 
 Referencias:
 https://github.com/skooner-k8s/skooner
+
